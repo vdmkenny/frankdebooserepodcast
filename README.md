@@ -18,6 +18,8 @@ This project fetches the latest MP3 URL from the website daily and stores its me
 
 The only reason this project exists is for easier mobile access to the podcast, and archival.
 
+Some older episodes were backfilled using archive.org snapshots.
+
 ## How It Works
 
 - **script.py**: Fetches the MP3 URL, updates the SQLite database (`episodes.db`) with episode metadata, and generates an RSS feed (`podcast.xml`).
