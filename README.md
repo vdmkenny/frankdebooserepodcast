@@ -1,8 +1,20 @@
 # Meer Weer Podcast with Frank Deboosere
 
+# TL;DR
+
+To add this podcast to your podcast player app of choice, simply add the following rss feed:
+```
+ https://vdmkenny.github.io/frankdebooserepodcast/podcast.xml
+```
+
+
+# Project Info
+
 This project fetches the latest MP3 URL from the website daily and stores its metadata (MP3 URL, publication date, and title) in a SQLite database. An updated RSS feed is then generated and can be served via GitHub Pages.
 
 **Important:** We do not rehost the MP3 files. The repository only stores metadata so you can add the podcast to a podcast app without visiting the website.
+
+The only reason this project exists is for easier mobile access to the podcast, and archival.
 
 ## How It Works
 
