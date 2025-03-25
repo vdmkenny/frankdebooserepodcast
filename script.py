@@ -206,7 +206,7 @@ def main():
             12: "December",
         }
         human_date = f"{now.day} {month_names[now.month]} {now.year}"
-        daily_title = "Podcast Aflevering " + human_date
+        daily_title = "Meer Weer " + human_date
         add_episode(conn, daily_mp3, daily_title, pub_date, daily_notes)
     else:
         print("No daily podcast MP3 found.")
