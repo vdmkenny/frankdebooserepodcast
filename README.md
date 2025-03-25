@@ -10,6 +10,8 @@ To add this podcast to your podcast player app of choice, simply add the followi
 
 # Project Info
 
+Frank Deboosere publishes a short daily podcast on his website. However, there is no browsable archive of episodes, nor is there an rss feed to subscribe to. 
+
 This project fetches the latest MP3 URL from the website daily and stores its metadata (MP3 URL, publication date, and title) in a SQLite database. An updated RSS feed is then generated and can be served via GitHub Pages.
 
 **Important:** We do not rehost the MP3 files. The repository only stores metadata so you can add the podcast to a podcast app without visiting the website.
