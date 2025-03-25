@@ -62,7 +62,7 @@ def get_daily_values(html):
     # Get the italic text.
     italic = soup.find("i")
     if italic:
-        notes += "\n" + italic.get_text(" ", strip=True)
+        notes += "\n\n" + italic.get_text(" ", strip=True)
     return notes
 
 
