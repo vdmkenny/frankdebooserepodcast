@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 
 BASE_URL = "https://www.frankdeboosere.be"
 PAGE_URL = "https://www.frankdeboosere.be/home.php"
+IMAGE_URL = "https://www.frankdeboosere.be/images/emoji.png"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -86,15 +87,23 @@ def generate_rss(conn, rss_path="podcast.xml"):
     ET.SubElement(channel, "description").text = (
         "Dagelijkse weer-update met Frank Deboosere"
     )
+
+    # Add channel image (standard and iTunes)
+    image = ET.SubElement(channel, "image")
+    ET.SubElement(image, "url").text = IMAGE_URL
+    ET.SubElement(image, "title").text = "Meer Weer Podcast met Frank Deboosere"
+    ET.SubElement(image, "link").text = BASE_URL
+    itunes_image = ET.SubElement(channel, "itunes:image")
+    itunes_image.set("href", IMAGE_URL)
+
     for ep in episodes:
         ep_url, ep_date, ep_title = ep
         item = ET.SubElement(channel, "item")
         ET.SubElement(item, "title").text = ep_title
-        ET.SubElement(item, "link").text = BASE_URL
+        ET.SubElement(item, "link").text = BASE_URL  # Link to homepage
         ET.SubElement(item, "guid").text = ep_url
         ET.SubElement(item, "pubDate").text = ep_date
 
-        # Convert RFC822 pub_date to human-readable Dutch format.
         try:
             dt = datetime.datetime.strptime(ep_date, "%a, %d %b %Y %H:%M:%S GMT")
             month_names = {
@@ -121,6 +130,9 @@ def generate_rss(conn, rss_path="podcast.xml"):
         enclosure = ET.SubElement(item, "enclosure")
         enclosure.set("url", ep_url)
         enclosure.set("type", "audio/mpeg")
+        # Add item-level image (iTunes)
+        itunes_item_image = ET.SubElement(item, "itunes:image")
+        itunes_item_image.set("href", IMAGE_URL)
     tree = ET.ElementTree(rss)
     tree.write(rss_path, encoding="utf-8", xml_declaration=True)
     print(f"RSS-feed gegenereerd op {rss_path}.")
@@ -132,7 +144,6 @@ def main():
         print("Geen MP3-bestand gevonden.")
         return
     print("Gevonden MP3 URL:", mp3_url)
-    # Use GMT+1 timezone.
     now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=1)))
     pub_date = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
     month_names = {
