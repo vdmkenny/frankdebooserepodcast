@@ -80,7 +80,12 @@ def generate_rss(conn, rss_path="podcast.xml"):
     cur = conn.cursor()
     cur.execute("SELECT url, pub_date, title FROM episodes ORDER BY pub_date DESC")
     episodes = cur.fetchall()
-    rss = ET.Element("rss", version="2.0")
+    # Declare the itunes namespace
+    rss = ET.Element(
+        "rss",
+        version="2.0",
+        **{"xmlns:itunes": "http://www.itunes.com/dtds/podcast-1.0.dtd"},
+    )
     channel = ET.SubElement(rss, "channel")
     ET.SubElement(channel, "title").text = "Meer Weer Podcast met Frank Deboosere"
     ET.SubElement(channel, "link").text = BASE_URL
@@ -88,7 +93,6 @@ def generate_rss(conn, rss_path="podcast.xml"):
         "Dagelijkse weer-update met Frank Deboosere"
     )
 
-    # Add channel image (standard and iTunes)
     image = ET.SubElement(channel, "image")
     ET.SubElement(image, "url").text = IMAGE_URL
     ET.SubElement(image, "title").text = "Meer Weer Podcast met Frank Deboosere"
@@ -100,7 +104,7 @@ def generate_rss(conn, rss_path="podcast.xml"):
         ep_url, ep_date, ep_title = ep
         item = ET.SubElement(channel, "item")
         ET.SubElement(item, "title").text = ep_title
-        ET.SubElement(item, "link").text = BASE_URL  # Link to homepage
+        ET.SubElement(item, "link").text = BASE_URL
         ET.SubElement(item, "guid").text = ep_url
         ET.SubElement(item, "pubDate").text = ep_date
 
@@ -130,7 +134,6 @@ def generate_rss(conn, rss_path="podcast.xml"):
         enclosure = ET.SubElement(item, "enclosure")
         enclosure.set("url", ep_url)
         enclosure.set("type", "audio/mpeg")
-        # Add item-level image (iTunes)
         itunes_item_image = ET.SubElement(item, "itunes:image")
         itunes_item_image.set("href", IMAGE_URL)
     tree = ET.ElementTree(rss)
