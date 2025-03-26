@@ -1,5 +1,7 @@
 # Meer Weer Podcast with Frank Deboosere
 
+[![Daily Podcast Update](https://github.com/vdmkenny/frankdebooserepodcast/actions/workflows/daily.yml/badge.svg)](https://github.com/vdmkenny/frankdebooserepodcast/actions/workflows/daily.yml)
+
 # TL;DR
 
 To add this podcast to your podcast player app of choice, simply add the following rss feed:
