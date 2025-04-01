@@ -10,10 +10,10 @@ DAILY_PAGE_URL = "https://www.frankdeboosere.be/home.php"
 EXTRA_PAGE_URL = "https://www.frankdeboosere.be/extrapodcast/podcastalgemeen.php"
 IMAGE_URL = "https://www.frankdeboosere.be/images/emoji.png"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Referer": "https://www.frankdeboosere.be/"
 }
-
 
 def get_mp3_url_and_html():
     try:
@@ -105,7 +105,6 @@ def init_db(db_path="episodes.db"):
     conn.commit()
     return conn
 
-
 def add_episode(conn, url, title, pub_date, notes):
     cur = conn.cursor()
     try:
@@ -115,8 +114,15 @@ def add_episode(conn, url, title, pub_date, notes):
         )
         conn.commit()
         print("Episode added:", title)
-    except sqlite3.IntegrityError:
+    except sqlite3.IntegrityError as e:
         print("Episode already exists, skipping:", title)
+        print("Parameters:")
+        print("  url:", url)
+        print("  pub_date:", pub_date)
+        print("  title:", title)
+        print("  notes:", notes)
+        print("Error details:", e)
+
 
 
 def generate_rss(conn, rss_path="podcast.xml"):
