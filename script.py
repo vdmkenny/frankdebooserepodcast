@@ -105,7 +105,7 @@ def init_db(db_path="episodes.db"):
     conn.commit()
     return conn
 
-def add_episode(conn, url, title, pub_date, notes):
+def add_episode(conn, url, title, pub_date, notes, replace_existing=False):
     cur = conn.cursor()
     try:
         cur.execute(
@@ -115,6 +115,19 @@ def add_episode(conn, url, title, pub_date, notes):
         conn.commit()
         print("Episode added:", title)
     except sqlite3.IntegrityError as e:
+        # The daily MP3 filenames are recycled every year (e.g. 03jun_wAar_alg.mp3),
+        # so today's episode collides on the UNIQUE url with last year's row.
+        # When replace_existing is set, knock off the stale prior-year episode and
+        # insert the current one in its place.
+        if replace_existing:
+            cur.execute("DELETE FROM episodes WHERE url = ?", (url,))
+            cur.execute(
+                "INSERT INTO episodes (url, pub_date, title, notes) VALUES (?, ?, ?, ?)",
+                (url, pub_date, title, notes),
+            )
+            conn.commit()
+            print("Episode replaced (collision):", title)
+            return
         print("Episode already exists, skipping:", title)
         print("Parameters:")
         print("  url:", url)
@@ -213,7 +226,7 @@ def main():
         }
         human_date = f"{now.day} {month_names[now.month]} {now.year}"
         daily_title = "Meer Weer " + human_date
-        add_episode(conn, daily_mp3, daily_title, pub_date, daily_notes)
+        add_episode(conn, daily_mp3, daily_title, pub_date, daily_notes, replace_existing=True)
     else:
         print("No daily podcast MP3 found.")
 
